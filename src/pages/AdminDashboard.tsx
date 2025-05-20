@@ -129,7 +129,7 @@ const reviews = [
     userName: 'Karthik Iyer',
     date: '2025-05-09',
     rating: 3,
-    comment: 'Decent place but the air conditioning wasn't working properly during my visit.',
+    comment: "Decent place but the air conditioning wasn't working properly during my visit.",
     status: 'pending'
   }
 ];
