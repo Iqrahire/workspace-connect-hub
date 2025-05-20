@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Wifi, Coffee, AirVent, ParkingMeter, MeetingRoom } from 'lucide-react';
+import { Wifi, Coffee, AirVent, ParkingMeter, SquareUser } from 'lucide-react';
 
 const amenities = [
   {
@@ -24,7 +24,7 @@ const amenities = [
     description: 'Convenient parking facilities available at most locations'
   },
   {
-    icon: <MeetingRoom className="h-6 w-6" />,
+    icon: <SquareUser className="h-6 w-6" />,
     name: 'Meeting Rooms',
     description: 'Access to professional meeting spaces when you need them'
   }

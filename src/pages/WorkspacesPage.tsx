@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { Star, MapPin, Search, Wifi, Coffee, AirVent, ParkingMeter, MeetingRoom } from 'lucide-react';
+import { Star, MapPin, Search, Wifi, Coffee, AirVent, ParkingMeter, SquareUser } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -86,7 +85,7 @@ const amenityIcons: Record<string, JSX.Element> = {
   coffee: <Coffee className="h-4 w-4" />,
   ac: <AirVent className="h-4 w-4" />,
   parking: <ParkingMeter className="h-4 w-4" />,
-  meeting: <MeetingRoom className="h-4 w-4" />
+  meeting: <SquareUser className="h-4 w-4" />
 };
 
 const WorkspacesPage = () => {
@@ -226,7 +225,7 @@ const WorkspacesPage = () => {
                         onCheckedChange={(checked) => handleFilterChange('meeting', checked as boolean)} 
                       />
                       <label htmlFor="meeting" className="ml-2 text-sm flex items-center">
-                        <MeetingRoom className="h-4 w-4 mr-1" /> Meeting Rooms
+                        <SquareUser className="h-4 w-4 mr-1" /> Meeting Rooms
                       </label>
                     </div>
                   </div>

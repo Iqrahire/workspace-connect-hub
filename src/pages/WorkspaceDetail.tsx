@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar } from '@/components/ui/calendar';
-import { Star, MapPin, Wifi, Coffee, AirVent, ParkingMeter, MeetingRoom, Clock, User, Check, Heart } from 'lucide-react';
+import { Star, MapPin, Wifi, Coffee, AirVent, ParkingMeter, SquareUser, Clock, User, Check, Heart } from 'lucide-react';
 
 // Mock workspace data
 const getWorkspace = (id: number) => {
@@ -69,7 +69,7 @@ const amenityIcons: Record<string, JSX.Element> = {
   coffee: <Coffee className="h-5 w-5" />,
   ac: <AirVent className="h-5 w-5" />,
   parking: <ParkingMeter className="h-5 w-5" />,
-  meeting: <MeetingRoom className="h-5 w-5" />
+  meeting: <SquareUser className="h-5 w-5" />
 };
 
 const amenityLabels: Record<string, string> = {
