@@ -1,14 +1,15 @@
+
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { Star, MapPin, Search, Wifi, Coffee, AirVent, ParkingMeter, SquareUser } from 'lucide-react';
+import { Search, Wifi, Coffee, AirVent, ParkingMeter, SquareUser } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import WorkspaceCard from '@/components/WorkspaceCard';
 
 // Mock data for workspaces
 const workspaces = [
@@ -21,7 +22,9 @@ const workspaces = [
     reviews: 120,
     pricePerDay: 599,
     amenities: ['wifi', 'coffee', 'ac', 'parking', 'meeting'],
-    imageUrl: 'https://images.unsplash.com/photo-1604328698692-f76ea9498e76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
+    imageUrl: 'https://images.unsplash.com/photo-1604328698692-f76ea9498e76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    isPremium: true,
+    hasVideoTour: true
   },
   {
     id: 2,
@@ -32,7 +35,8 @@ const workspaces = [
     reviews: 95,
     pricePerDay: 499,
     amenities: ['wifi', 'coffee', 'ac', 'meeting'],
-    imageUrl: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
+    imageUrl: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    isPremium: true
   },
   {
     id: 3,
@@ -43,7 +47,8 @@ const workspaces = [
     reviews: 108,
     pricePerDay: 549,
     amenities: ['wifi', 'coffee', 'ac', 'parking'],
-    imageUrl: 'https://images.unsplash.com/photo-1564069114553-7215e1ff1890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
+    imageUrl: 'https://images.unsplash.com/photo-1564069114553-7215e1ff1890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+    hasVideoTour: true
   },
   {
     id: 4,
@@ -145,8 +150,8 @@ const WorkspacesPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Filters Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 sticky top-20">
-                <h2 className="font-semibold text-lg mb-4">Filters</h2>
+              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 sticky top-20">
+                <h2 className="font-semibold text-lg mb-5">Filters</h2>
                 
                 <div className="mb-6">
                   <label className="block text-sm font-medium mb-2">Search</label>
@@ -155,7 +160,7 @@ const WorkspacesPage = () => {
                     <Input
                       type="text"
                       placeholder="Search location..."
-                      className="pl-10"
+                      className="pl-10 rounded-lg"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -176,8 +181,8 @@ const WorkspacesPage = () => {
                 </div>
                 
                 <div className="mb-6">
-                  <h3 className="block text-sm font-medium mb-2">Amenities</h3>
-                  <div className="space-y-2">
+                  <h3 className="block text-sm font-medium mb-3">Amenities</h3>
+                  <div className="space-y-3">
                     <div className="flex items-center">
                       <Checkbox 
                         id="wifi" 
@@ -257,49 +262,18 @@ const WorkspacesPage = () => {
                 <div className="text-gray-600">
                   {filteredWorkspaces.length} workspace{filteredWorkspaces.length !== 1 ? 's' : ''} found
                 </div>
+                <Link to="/admin/dashboard">
+                  <Button size="sm" variant="outline">Admin Dashboard</Button>
+                </Link>
               </div>
               
               {filteredWorkspaces.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredWorkspaces.map((workspace) => (
-                    <Link to={`/workspace/${workspace.id}`} key={workspace.id}>
-                      <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
-                        <div className="h-48 overflow-hidden">
-                          <img 
-                            src={workspace.imageUrl} 
-                            alt={workspace.name} 
-                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                          />
-                        </div>
-                        <CardContent className="pt-4 flex-grow">
-                          <div className="flex items-center mb-1">
-                            <div className="flex items-center text-yellow-500">
-                              <Star className="fill-yellow-500 stroke-yellow-500 h-4 w-4" />
-                              <span className="ml-1 text-sm font-medium">{workspace.rating}</span>
-                            </div>
-                            <span className="mx-1 text-gray-400">•</span>
-                            <span className="text-sm text-gray-500">{workspace.reviews} reviews</span>
-                          </div>
-                          <h3 className="font-bold text-lg mb-1">{workspace.name}</h3>
-                          <div className="flex items-start gap-1 text-gray-600">
-                            <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm">{workspace.area}, {workspace.city}</span>
-                          </div>
-                          <div className="flex gap-1 mt-3">
-                            {workspace.amenities.map((amenity) => (
-                              <div key={amenity} className="p-1 bg-gray-100 rounded-md text-gray-600">
-                                {amenityIcons[amenity]}
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                        <CardFooter className="pt-0 pb-4">
-                          <div className="text-brand-600 font-semibold">
-                            ₹{workspace.pricePerDay}/day
-                          </div>
-                        </CardFooter>
-                      </Card>
-                    </Link>
+                    <WorkspaceCard 
+                      key={workspace.id}
+                      {...workspace}
+                    />
                   ))}
                 </div>
               ) : (

@@ -35,7 +35,7 @@ const getWorkspace = (id: number) => {
       'https://images.unsplash.com/photo-1564069114553-7215e1ff1890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80',
       'https://images.unsplash.com/photo-1572025442646-866d16c84a54?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80',
     ],
-    reviews: [
+    reviewsList: [
       {
         id: 1,
         name: 'Priya Sharma',
@@ -60,7 +60,9 @@ const getWorkspace = (id: number) => {
         date: '2023-03-10',
         comment: 'I love this place! The atmosphere is conducive to productivity and the meeting rooms are well-equipped.',
       },
-    ]
+    ],
+    isPremium: true,
+    hasVideoTour: true
   };
 };
 
@@ -107,12 +109,26 @@ const WorkspaceDetail = () => {
           <div className="container mx-auto px-4 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Main Image */}
-              <div className="lg:col-span-2 h-96 overflow-hidden rounded-lg">
+              <div className="lg:col-span-2 h-96 overflow-hidden rounded-xl relative">
                 <img 
                   src={mainImage} 
                   alt={workspace.name} 
                   className="w-full h-full object-cover"
                 />
+                {workspace.isPremium && (
+                  <div className="absolute top-4 left-4 bg-blue-500 text-white px-4 py-1 rounded-full text-sm">
+                    Premium
+                  </div>
+                )}
+                {workspace.hasVideoTour && (
+                  <div className="absolute bottom-4 right-4 bg-gray-900/80 text-white px-4 py-2 rounded-md text-sm flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    Video Tour
+                  </div>
+                )}
+                <button className="absolute top-4 right-4 bg-white/80 p-2 rounded-full hover:bg-white transition-colors">
+                  <Heart className="h-5 w-5" />
+                </button>
               </div>
               
               {/* Thumbnails */}
@@ -120,7 +136,7 @@ const WorkspaceDetail = () => {
                 {workspace.images.map((img, index) => (
                   <div 
                     key={index} 
-                    className={`h-44 overflow-hidden rounded-lg cursor-pointer ${img === mainImage ? 'ring-2 ring-brand-500' : ''}`}
+                    className={`h-44 overflow-hidden rounded-xl cursor-pointer ${img === mainImage ? 'ring-2 ring-brand-500' : ''}`}
                     onClick={() => handleThumbnailClick(img)}
                   >
                     <img 
@@ -140,22 +156,23 @@ const WorkspaceDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left column - Workspace info */}
             <div className="lg:col-span-2">
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+              <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h1 className="text-3xl font-bold">{workspace.name}</h1>
+                  <div>
+                    <h1 className="text-3xl font-bold">{workspace.name}</h1>
+                    <div className="flex items-center mt-1">
+                      <div className="flex items-center text-yellow-500">
+                        <Star className="fill-yellow-500 stroke-yellow-500 h-5 w-5" />
+                        <span className="ml-1 font-medium">{workspace.rating}</span>
+                      </div>
+                      <span className="mx-1 text-gray-400">•</span>
+                      <span className="text-gray-500">{workspace.reviewsList.length} reviews</span>
+                    </div>
+                  </div>
                   <Button variant="outline" className="flex items-center gap-1">
                     <Heart className="h-4 w-4" />
                     <span>Save</span>
                   </Button>
-                </div>
-                
-                <div className="flex items-center mb-2">
-                  <div className="flex items-center text-yellow-500">
-                    <Star className="fill-yellow-500 stroke-yellow-500 h-4 w-4" />
-                    <span className="ml-1 font-medium">{workspace.rating}</span>
-                  </div>
-                  <span className="mx-1 text-gray-400">•</span>
-                  <span className="text-gray-500">{workspace.reviews.length} reviews</span>
                 </div>
                 
                 <div className="flex items-start gap-1 text-gray-600 mb-4">
@@ -183,10 +200,10 @@ const WorkspaceDetail = () => {
                 
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold mb-3">Amenities</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="flex flex-wrap gap-3">
                     {workspace.amenities.map((amenity) => (
-                      <div key={amenity} className="flex items-center">
-                        <div className="p-2 rounded-full bg-brand-50 text-brand-500 mr-3">
+                      <div key={amenity} className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+                        <div className="p-1 text-brand-500 mr-2">
                           {amenityIcons[amenity]}
                         </div>
                         <span>{amenityLabels[amenity]}</span>
@@ -204,10 +221,10 @@ const WorkspaceDetail = () => {
                 </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="bg-white p-6 rounded-xl shadow-sm">
                 <h2 className="text-xl font-semibold mb-4">Reviews</h2>
                 <div className="space-y-6">
-                  {workspace.reviews.map((review) => (
+                  {workspace.reviewsList.map((review) => (
                     <div key={review.id} className="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
                       <div className="flex items-center mb-2">
                         <img 
@@ -242,7 +259,7 @@ const WorkspaceDetail = () => {
             
             {/* Right column - Booking card */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-20">
+              <Card className="sticky top-20 rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <h2 className="text-xl font-semibold mb-4">Book This Workspace</h2>
                   

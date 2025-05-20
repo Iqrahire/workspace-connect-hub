@@ -32,10 +32,10 @@ const amenities = [
 
 const AmenitiesSection = () => {
   return (
-    <section className="py-12 md:py-16">
+    <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold mb-2">Workspace Amenities</h2>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-3">Workspace Amenities</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             All our listed workspaces come with essential amenities to ensure a productive work experience
           </p>
@@ -45,9 +45,9 @@ const AmenitiesSection = () => {
           {amenities.map((amenity, index) => (
             <div 
               key={index} 
-              className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow text-center"
+              className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow text-center group"
             >
-              <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-brand-50 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-brand-100 transition-colors">
                 {amenity.icon}
               </div>
               <h3 className="font-semibold text-lg mb-2">{amenity.name}</h3>
