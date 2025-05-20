@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Star, MapPin, Wifi, Coffee, AirVent, ParkingMeter, SquareUser, Heart, Share2, Clock } from 'lucide-react';
+import { Star, MapPin, Wifi, Coffee, AirVent, ParkingMeter, SquareUser, Heart, Share2, Clock, Play } from 'lucide-react';
 import ImageGallery from '@/components/ImageGallery';
 import PlanCard, { WorkspacePlan } from '@/components/PlanCard';
 import ContactBlock from '@/components/ContactBlock';
@@ -50,7 +49,7 @@ const getWorkspace = (id: number) => {
         id: 'hot-desk',
         name: 'Hot Desk',
         price: 500,
-        billingCycle: 'day',
+        billingCycle: 'day' as const,
         features: [
           { text: 'Access to common area' },
           { text: 'High-speed WiFi' },
@@ -61,7 +60,7 @@ const getWorkspace = (id: number) => {
         id: 'dedicated-desk',
         name: 'Dedicated Desk',
         price: 8000,
-        billingCycle: 'month',
+        billingCycle: 'month' as const,
         features: [
           { text: 'Personal desk' },
           { text: 'Locker storage' },
@@ -73,7 +72,7 @@ const getWorkspace = (id: number) => {
         id: 'private-office',
         name: 'Private Office',
         price: 25000,
-        billingCycle: 'month',
+        billingCycle: 'month' as const,
         features: [
           { text: 'Private lockable office' },
           { text: '20 hours meeting room credits/month' },
