@@ -54,16 +54,16 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				brand: {
-					50: '#f0f9ff',
-					100: '#e0f2fe',
-					200: '#bae6fd',
-					300: '#7dd3fc',
-					400: '#38bdf8',
-					500: '#0ea5e9',
-					600: '#0284c7',
-					700: '#0369a1',
-					800: '#075985',
-					900: '#0c4a6e',
+					50: '#f2f1fe',
+					100: '#e4e3fc',
+					200: '#cdc9fa',
+					300: '#afa8f5',
+					400: '#917eef',
+					500: '#7a5ee7',
+					600: '#4f46e5', // Primary brand color
+					700: '#3b37a2', // Secondary brand color
+					800: '#382f80',
+					900: '#322e69',
 				},
 				accent: {
 					50: '#fff7ed',
