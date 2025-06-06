@@ -403,6 +403,8 @@ const WorkspaceDetail = () => {
                       isSelected={selectedPlan === plan.id}
                       onSelect={() => handlePlanSelect(plan.id)}
                       onBookNow={handleBookNow}
+                      workspaceName={workspace.name}
+                      workspaceAddress={workspace.address}
                     />
                   ))}
                 </div>
