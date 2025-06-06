@@ -2,6 +2,8 @@
 import React from 'react';
 import HomeHero from '@/components/HomeHero';
 import FeaturedWorkspaces from '@/components/FeaturedWorkspaces';
+import PopularCities from '@/components/PopularCities';
+import HowItWorks from '@/components/HowItWorks';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import CtaSection from '@/components/CtaSection';
@@ -15,6 +17,8 @@ const Index = () => {
       <main className="flex-grow">
         <HomeHero />
         <FeaturedWorkspaces />
+        <PopularCities />
+        <HowItWorks />
         <AmenitiesSection />
         <TestimonialsSection />
         <CtaSection />

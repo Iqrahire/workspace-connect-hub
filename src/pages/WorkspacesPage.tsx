@@ -1,15 +1,15 @@
-
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
-import { Search, Wifi, Coffee, AirVent, ParkingMeter, SquareUser } from 'lucide-react';
+import { Search, Wifi, Coffee, AirVent, ParkingMeter, SquareUser, Filter } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import WorkspaceCard from '@/components/WorkspaceCard';
+import MobileFilterDrawer from '@/components/MobileFilterDrawer';
 
 // Mock data for workspaces
 const workspaces = [
@@ -106,6 +106,7 @@ const WorkspacesPage = () => {
     parking: false,
     meeting: false
   });
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Filter workspaces based on search and filters
   const filteredWorkspaces = workspaces.filter(workspace => {
@@ -137,21 +138,48 @@ const WorkspacesPage = () => {
     }));
   };
 
+  const handleResetFilters = () => {
+    setSearchTerm(locationParam || '');
+    setPriceRange([0, 1000]);
+    setFilters({
+      wifi: false,
+      coffee: false,
+      ac: false,
+      parking: false,
+      meeting: false
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow bg-gray-50">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-2">Workspaces</h1>
-          {locationParam && (
-            <p className="text-gray-600 mb-6">Showing results for "{locationParam}"</p>
-          )}
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Workspaces</h1>
+            {locationParam && (
+              <p className="text-gray-600 mb-4">Showing results for "{locationParam}"</p>
+            )}
+            
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden mb-6">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsMobileFilterOpen(true)}
+                className="w-full flex items-center justify-center gap-2"
+              >
+                <Filter className="h-4 w-4" />
+                Filters
+              </Button>
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Filters Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 sticky top-20">
-                <h2 className="font-semibold text-lg mb-5">Filters</h2>
+            {/* Desktop Filters Sidebar */}
+            <div className="lg:col-span-1 hidden lg:block">
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-20">
+                <h2 className="font-semibold text-lg mb-6">Filters</h2>
                 
                 <div className="mb-6">
                   <label className="block text-sm font-medium mb-2">Search</label>
@@ -239,17 +267,7 @@ const WorkspacesPage = () => {
                 <Button 
                   variant="outline" 
                   className="w-full"
-                  onClick={() => {
-                    setSearchTerm(locationParam || '');
-                    setPriceRange([0, 1000]);
-                    setFilters({
-                      wifi: false,
-                      coffee: false,
-                      ac: false,
-                      parking: false,
-                      meeting: false
-                    });
-                  }}
+                  onClick={handleResetFilters}
                 >
                   Reset Filters
                 </Button>
@@ -258,7 +276,7 @@ const WorkspacesPage = () => {
             
             {/* Workspace Listings */}
             <div className="lg:col-span-3">
-              <div className="mb-4 flex justify-between items-center">
+              <div className="mb-6 flex justify-between items-center">
                 <div className="text-gray-600">
                   {filteredWorkspaces.length} workspace{filteredWorkspaces.length !== 1 ? 's' : ''} found
                 </div>
@@ -268,7 +286,7 @@ const WorkspacesPage = () => {
               </div>
               
               {filteredWorkspaces.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredWorkspaces.map((workspace) => (
                     <WorkspaceCard 
                       key={workspace.id}
@@ -277,22 +295,12 @@ const WorkspacesPage = () => {
                   ))}
                 </div>
               ) : (
-                <div className="bg-white p-8 rounded-lg text-center">
-                  <p className="text-gray-500">No workspaces found matching your criteria.</p>
+                <div className="bg-white p-8 rounded-xl text-center shadow-sm">
+                  <p className="text-gray-500 mb-4">No workspaces found matching your criteria.</p>
                   <Button 
                     variant="link" 
-                    className="mt-2 text-brand-600"
-                    onClick={() => {
-                      setSearchTerm(locationParam || '');
-                      setPriceRange([0, 1000]);
-                      setFilters({
-                        wifi: false,
-                        coffee: false,
-                        ac: false,
-                        parking: false,
-                        meeting: false
-                      });
-                    }}
+                    className="text-brand-600"
+                    onClick={handleResetFilters}
                   >
                     Reset filters
                   </Button>
@@ -301,6 +309,19 @@ const WorkspacesPage = () => {
             </div>
           </div>
         </div>
+        
+        {/* Mobile Filter Drawer */}
+        <MobileFilterDrawer
+          isOpen={isMobileFilterOpen}
+          onClose={() => setIsMobileFilterOpen(false)}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onResetFilters={handleResetFilters}
+        />
       </main>
       <Footer />
     </div>
