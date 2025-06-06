@@ -46,25 +46,27 @@ const PlanCard: React.FC<PlanCardProps> = ({
     <>
       <div 
         className={cn(
-          "border rounded-lg p-5 cursor-pointer transition-all",
-          isSelected ? "border-brand-500 bg-brand-50 shadow-sm" : "border-gray-200 hover:border-brand-300"
+          "border rounded-lg p-4 lg:p-5 cursor-pointer transition-all hover:shadow-md",
+          isSelected 
+            ? "border-brand-500 bg-brand-50 shadow-sm ring-1 ring-brand-200" 
+            : "border-border bg-card hover:border-brand-300"
         )}
         onClick={onSelect}
       >
         <div className="flex justify-between items-start mb-4">
-          <div>
-            <h3 className="text-lg font-semibold">{plan.name}</h3>
-            <div className="mt-1 flex items-baseline">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-foreground mb-1">{plan.name}</h3>
+            <div className="flex items-baseline">
               <span className="text-2xl font-bold text-brand-600">
-                ₹{plan.price}
+                ₹{plan.price.toLocaleString()}
               </span>
-              <span className="text-gray-500 ml-1">
+              <span className="text-muted-foreground ml-1 text-sm">
                 /{plan.billingCycle}
               </span>
             </div>
           </div>
           {isSelected && (
-            <Badge className="bg-brand-100 text-brand-800 border-brand-200">
+            <Badge className="bg-brand-100 text-brand-800 border-brand-200 text-xs">
               Selected
             </Badge>
           )}
@@ -72,16 +74,16 @@ const PlanCard: React.FC<PlanCardProps> = ({
         
         <div className="space-y-2 mb-6">
           {plan.features.map((feature, index) => (
-            <div key={index} className="flex items-start">
-              <Check className="h-4 w-4 text-brand-500 mt-1 mr-2 flex-shrink-0" />
-              <span className="text-sm text-gray-600">{feature.text}</span>
+            <div key={index} className="flex items-start gap-2">
+              <Check className="h-4 w-4 text-brand-500 mt-0.5 flex-shrink-0" />
+              <span className="text-sm text-muted-foreground leading-relaxed">{feature.text}</span>
             </div>
           ))}
         </div>
         
         {isSelected && (
           <Button 
-            className="w-full bg-brand-600 hover:bg-brand-700" 
+            className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-sm" 
             onClick={(e) => {
               e.stopPropagation();
               handleBookNow();

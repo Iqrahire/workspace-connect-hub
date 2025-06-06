@@ -89,17 +89,13 @@ const PaymentOptionsDialog: React.FC<PaymentOptionsDialogProps> = ({
     }
 
     const method = paymentMethods.find(m => m.id === selectedPaymentMethod);
-    
-    // Simulate booking creation
     const bookingId = 'WS' + Date.now().toString().slice(-8);
     
     if (selectedPaymentMethod === 'online' || selectedPaymentMethod === 'upi' || selectedPaymentMethod === 'wallet') {
-      // For online payments, simulate payment processing
       toast.success('Redirecting to payment gateway...', {
         description: 'You will be redirected to complete your payment securely.'
       });
       
-      // Simulate redirect delay
       setTimeout(() => {
         toast.success('Booking confirmed!', {
           description: `Your booking ID is ${bookingId}. Confirmation details sent to your email.`
@@ -107,7 +103,6 @@ const PaymentOptionsDialog: React.FC<PaymentOptionsDialogProps> = ({
         onClose();
       }, 2000);
     } else {
-      // For pay at venue
       toast.success('Booking confirmed!', {
         description: `Your booking ID is ${bookingId}. Please pay at the workspace when you arrive.`
       });
@@ -117,41 +112,41 @@ const PaymentOptionsDialog: React.FC<PaymentOptionsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Choose Payment Method</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-foreground">Choose Payment Method</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6">
           {/* Booking Summary */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold mb-3">Booking Details</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="bg-muted/50 rounded-lg p-5">
+            <h3 className="font-semibold mb-4 text-foreground">Booking Details</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">Workspace:</span>
-                <p className="font-medium">{bookingDetails.workspaceName}</p>
+                <span className="text-muted-foreground">Workspace:</span>
+                <p className="font-medium text-foreground">{bookingDetails.workspaceName}</p>
               </div>
               <div>
-                <span className="text-gray-600">Plan:</span>
-                <p className="font-medium">{bookingDetails.plan}</p>
+                <span className="text-muted-foreground">Plan:</span>
+                <p className="font-medium text-foreground">{bookingDetails.plan}</p>
               </div>
               <div>
-                <span className="text-gray-600">Date & Time:</span>
-                <p className="font-medium">
+                <span className="text-muted-foreground">Date & Time:</span>
+                <p className="font-medium text-foreground">
                   {bookingDetails.date.toLocaleDateString()} at {bookingDetails.time}
                 </p>
               </div>
               <div>
-                <span className="text-gray-600">Duration:</span>
-                <p className="font-medium">{bookingDetails.duration} {bookingDetails.durationUnit}</p>
+                <span className="text-muted-foreground">Duration:</span>
+                <p className="font-medium text-foreground">{bookingDetails.duration} {bookingDetails.durationUnit}</p>
               </div>
               <div>
-                <span className="text-gray-600">People:</span>
-                <p className="font-medium">{bookingDetails.numberOfPeople}</p>
+                <span className="text-muted-foreground">People:</span>
+                <p className="font-medium text-foreground">{bookingDetails.numberOfPeople}</p>
               </div>
               <div>
-                <span className="text-gray-600">Total Amount:</span>
-                <p className="font-bold text-brand-600 text-lg">₹{bookingDetails.total}</p>
+                <span className="text-muted-foreground">Total Amount:</span>
+                <p className="font-bold text-brand-600 text-lg">₹{bookingDetails.total.toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -160,34 +155,36 @@ const PaymentOptionsDialog: React.FC<PaymentOptionsDialogProps> = ({
 
           {/* Payment Methods */}
           <div>
-            <h3 className="font-semibold mb-4">Select Payment Method</h3>
+            <h3 className="font-semibold mb-4 text-foreground">Select Payment Method</h3>
             <div className="space-y-3">
               {paymentMethods.map((method) => (
                 <div
                   key={method.id}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                  className={cn(
+                    "border rounded-lg p-4 cursor-pointer transition-all hover:shadow-sm",
                     selectedPaymentMethod === method.id
-                      ? 'border-brand-500 bg-brand-50'
-                      : 'border-gray-200 hover:border-brand-300'
-                  }`}
+                      ? 'border-brand-500 bg-brand-50 ring-1 ring-brand-200'
+                      : 'border-border bg-card hover:border-brand-300'
+                  )}
                   onClick={() => handlePaymentMethodSelect(method.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${
+                      <div className={cn(
+                        "p-3 rounded-lg transition-colors",
                         selectedPaymentMethod === method.id 
                           ? 'bg-brand-100 text-brand-600' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
+                          : 'bg-muted text-muted-foreground'
+                      )}>
                         {method.icon}
                       </div>
-                      <div>
-                        <h4 className="font-semibold">{method.title}</h4>
-                        <p className="text-sm text-gray-600">{method.description}</p>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-foreground">{method.title}</h4>
+                        <p className="text-sm text-muted-foreground">{method.description}</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={method.badgeColor}>
+                    <div className="flex items-center space-x-3">
+                      <Badge className={method.badgeColor + " text-xs"}>
                         {method.badge}
                       </Badge>
                       {selectedPaymentMethod === method.id && (
@@ -202,11 +199,11 @@ const PaymentOptionsDialog: React.FC<PaymentOptionsDialogProps> = ({
 
           {/* Payment Security Info */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 mb-2">
               <CheckCircle className="h-5 w-5 text-blue-600" />
               <span className="font-medium text-blue-800">Secure Payment</span>
             </div>
-            <p className="text-sm text-blue-700 mt-1">
+            <p className="text-sm text-blue-700">
               Your payment information is encrypted and secure. We never store your card details.
             </p>
           </div>
@@ -214,13 +211,13 @@ const PaymentOptionsDialog: React.FC<PaymentOptionsDialogProps> = ({
           {/* Action Buttons */}
           <div className="flex space-x-3">
             <Button
-              className="flex-1 bg-brand-600 hover:bg-brand-700"
+              className="flex-1 bg-brand-600 hover:bg-brand-700 text-white py-3"
               onClick={handleConfirmBooking}
               disabled={!selectedPaymentMethod}
             >
               Confirm Booking
             </Button>
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outline" onClick={onClose} className="px-6">
               Cancel
             </Button>
           </div>

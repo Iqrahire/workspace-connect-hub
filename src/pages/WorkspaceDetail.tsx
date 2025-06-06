@@ -197,66 +197,70 @@ const WorkspaceDetail = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="flex-grow bg-gray-50">
+      <main className="flex-grow">
         {/* Header Section */}
-        <div className="bg-white border-b">
+        <div className="bg-card border-b border-border">
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
                   {workspace.isPremium && (
                     <Badge className="bg-brand-100 text-brand-800 border-brand-200">
                       Premium
                     </Badge>
                   )}
-                  <h1 className="text-3xl font-bold">{workspace.name}</h1>
+                  <h1 className="text-2xl md:text-3xl font-bold text-foreground">{workspace.name}</h1>
                 </div>
-                <div className="flex items-center mt-1">
-                  <MapPin className="h-4 w-4 text-gray-500 mr-1" />
-                  <span className="text-gray-600">{workspace.area}, {workspace.city}</span>
-                  <span className="mx-1 text-gray-400">•</span>
-                  <div className="flex items-center text-yellow-500">
-                    <Star className="fill-yellow-500 stroke-yellow-500 h-4 w-4" />
-                    <span className="ml-1 font-medium">{workspace.rating}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm">
+                  <div className="flex items-center text-muted-foreground">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span>{workspace.area}, {workspace.city}</span>
                   </div>
-                  <span className="mx-1 text-gray-400">•</span>
-                  <Link to="#reviews" className="text-gray-500 hover:text-brand-600">
-                    {workspace.reviews} reviews
-                  </Link>
+                  <div className="flex items-center">
+                    <div className="flex items-center text-yellow-500 mr-3">
+                      <Star className="fill-yellow-500 stroke-yellow-500 h-4 w-4" />
+                      <span className="ml-1 font-medium">{workspace.rating}</span>
+                    </div>
+                    <Link to="#reviews" className="text-brand-600 hover:text-brand-700 transition-colors">
+                      {workspace.reviews} reviews
+                    </Link>
+                  </div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <Button 
                   variant="outline" 
+                  size="sm"
                   className="flex items-center gap-2"
                   onClick={handleSave}
                 >
                   <Heart className="h-4 w-4" />
-                  Save
+                  <span className="hidden sm:inline">Save</span>
                 </Button>
                 <Button
                   variant="outline"
+                  size="sm"
                   className="flex items-center gap-2"
                   onClick={handleShare}
                 >
                   <Share2 className="h-4 w-4" />
-                  Share
+                  <span className="hidden sm:inline">Share</span>
                 </Button>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Main Content - Two Section Flex Layout */}
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row gap-8">
+        {/* Main Content */}
+        <div className="container mx-auto px-4 py-6 lg:py-8">
+          <div className="flex flex-col xl:flex-row gap-6 lg:gap-8">
             {/* Left Section - Image Gallery and Details */}
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               {/* Image Gallery */}
-              <div className="mb-8">
+              <div className="mb-6 lg:mb-8">
                 <ImageGallery 
                   images={workspace.images}
                   hasVideoTour={workspace.hasVideoTour}
@@ -265,25 +269,25 @@ const WorkspaceDetail = () => {
               </div>
               
               {/* Details Tabs */}
-              <Tabs defaultValue="details" className="space-y-8">
-                <TabsList>
+              <Tabs defaultValue="details" className="space-y-6">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="amenities">Amenities</TabsTrigger>
                   <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
                 
                 {/* Details Tab */}
-                <TabsContent value="details" className="space-y-8">
-                  <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-                    <h2 className="text-xl font-semibold mb-4">About this workspace</h2>
-                    <p className="text-gray-700 whitespace-pre-line">
+                <TabsContent value="details" className="space-y-6">
+                  <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
+                    <h2 className="text-xl font-semibold mb-4 text-foreground">About this workspace</h2>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                       {workspace.description}
                     </p>
                   </div>
                   
-                  <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-                    <h2 className="text-xl font-semibold mb-4">Location</h2>
-                    <p className="mb-4">{workspace.address}</p>
+                  <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
+                    <h2 className="text-xl font-semibold mb-4 text-foreground">Location</h2>
+                    <p className="mb-4 text-muted-foreground">{workspace.address}</p>
                     <MapEmbed 
                       address={workspace.address}
                       height="300px"
@@ -291,32 +295,38 @@ const WorkspaceDetail = () => {
                     />
                   </div>
                   
-                  <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-                    <h2 className="text-xl font-semibold mb-4">Opening Hours</h2>
-                    <div className="flex flex-col md:flex-row md:items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-5 w-5 text-gray-500" />
-                        <span>Hours: {workspace.openHours}</span>
+                  <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
+                    <h2 className="text-xl font-semibold mb-4 text-foreground">Opening Hours</h2>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <Clock className="h-5 w-5 text-brand-600" />
+                        <div>
+                          <span className="font-medium">Hours:</span>
+                          <span className="ml-2 text-muted-foreground">{workspace.openHours}</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-gray-500">Open on:</span>
-                        <span className="ml-2">{workspace.openDays}</span>
+                      <div className="flex items-start gap-3">
+                        <div className="w-5 h-5" />
+                        <div>
+                          <span className="font-medium">Open days:</span>
+                          <span className="ml-2 text-muted-foreground">{workspace.openDays}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                   
                   {workspace.hasVideoTour && (
-                    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-                      <h2 className="text-xl font-semibold mb-4">Video Tour</h2>
+                    <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
+                      <h2 className="text-xl font-semibold mb-4 text-foreground">Video Tour</h2>
                       <div 
-                        className="relative h-48 bg-gray-100 rounded-lg cursor-pointer flex items-center justify-center hover:bg-gray-200 transition-colors"
+                        className="relative h-48 bg-muted rounded-lg cursor-pointer flex items-center justify-center hover:bg-muted/80 transition-colors group"
                         onClick={handleWatchVideo}
                       >
-                        <div className="flex flex-col items-center gap-2">
-                          <div className="bg-brand-600 rounded-full p-3">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="bg-brand-600 rounded-full p-4 group-hover:bg-brand-700 transition-colors">
                             <Play className="h-6 w-6 text-white" />
                           </div>
-                          <span className="font-medium">Watch Video Tour</span>
+                          <span className="font-medium text-foreground">Watch Video Tour</span>
                         </div>
                       </div>
                     </div>
@@ -325,15 +335,15 @@ const WorkspaceDetail = () => {
                 
                 {/* Amenities Tab */}
                 <TabsContent value="amenities">
-                  <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-                    <h2 className="text-xl font-semibold mb-4">Amenities</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
+                    <h2 className="text-xl font-semibold mb-6 text-foreground">Amenities</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {workspace.amenities.map((amenity) => (
-                        <div key={amenity} className="flex items-center bg-gray-50 p-4 rounded-lg">
-                          <div className="p-2 bg-brand-50 text-brand-600 rounded-lg mr-3">
+                        <div key={amenity} className="flex items-center bg-muted/50 p-4 rounded-lg">
+                          <div className="p-2 bg-brand-50 text-brand-600 rounded-lg mr-3 flex-shrink-0">
                             {amenityIcons[amenity]}
                           </div>
-                          <span className="font-medium">{amenityLabels[amenity]}</span>
+                          <span className="font-medium text-foreground">{amenityLabels[amenity]}</span>
                         </div>
                       ))}
                     </div>
@@ -342,41 +352,41 @@ const WorkspaceDetail = () => {
                 
                 {/* Reviews Tab */}
                 <TabsContent value="reviews" id="reviews">
-                  <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-xl font-semibold">Reviews</h2>
+                      <h2 className="text-xl font-semibold text-foreground">Reviews</h2>
                       <div className="flex items-center text-yellow-500">
                         <Star className="fill-yellow-500 stroke-yellow-500 h-5 w-5 mr-1" />
                         <span className="text-lg font-semibold">{workspace.rating}</span>
-                        <span className="text-gray-500 text-sm ml-2">({workspace.reviews} reviews)</span>
+                        <span className="text-muted-foreground text-sm ml-2">({workspace.reviews} reviews)</span>
                       </div>
                     </div>
                     
                     <div className="space-y-6">
                       {workspace.reviewsList.map((review) => (
-                        <div key={review.id} className="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
-                          <div className="flex items-center mb-2">
+                        <div key={review.id} className="border-b border-border pb-6 last:border-0 last:pb-0">
+                          <div className="flex items-center mb-3">
                             <img 
                               src={review.avatar} 
                               alt={review.name} 
                               className="w-10 h-10 rounded-full mr-3"
                             />
                             <div>
-                              <h4 className="font-medium">{review.name}</h4>
-                              <div className="flex items-center">
+                              <h4 className="font-medium text-foreground">{review.name}</h4>
+                              <div className="flex items-center gap-2">
                                 <div className="flex text-yellow-500">
                                   {[...Array(5)].map((_, i) => (
                                     <Star 
                                       key={i} 
-                                      className={`h-3 w-3 ${i < review.rating ? 'fill-yellow-500 stroke-yellow-500' : 'stroke-gray-300'}`} 
+                                      className={`h-3 w-3 ${i < review.rating ? 'fill-yellow-500 stroke-yellow-500' : 'stroke-muted-foreground/50'}`} 
                                     />
                                   ))}
                                 </div>
-                                <span className="text-xs text-gray-500 ml-2">{review.date}</span>
+                                <span className="text-xs text-muted-foreground">{review.date}</span>
                               </div>
                             </div>
                           </div>
-                          <p className="text-gray-700 text-sm">{review.comment}</p>
+                          <p className="text-muted-foreground text-sm leading-relaxed">{review.comment}</p>
                         </div>
                       ))}
                     </div>
@@ -389,11 +399,12 @@ const WorkspaceDetail = () => {
               </Tabs>
             </div>
             
-            {/* Right Section - Pricing Table */}
-            <div className="w-full lg:w-96 space-y-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm sticky top-20">
-                <h2 className="text-xl font-semibold mb-4">Select a plan</h2>
-                <p className="text-sm text-gray-500 mb-6">Choose a plan that works for you</p>
+            {/* Right Section - Sidebar */}
+            <div className="w-full xl:w-96 space-y-6">
+              {/* Pricing Section */}
+              <div className="bg-card rounded-lg border border-border p-6 shadow-sm xl:sticky xl:top-6">
+                <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
+                <p className="text-sm text-muted-foreground mb-6">Choose a plan that works for you</p>
                 
                 <div className="space-y-4">
                   {workspace.plans.map((plan) => (
@@ -410,6 +421,7 @@ const WorkspaceDetail = () => {
                 </div>
               </div>
               
+              {/* Contact Information */}
               <ContactBlock
                 contactName={workspace.contactName}
                 contactPhone={workspace.contactPhone}
@@ -419,6 +431,7 @@ const WorkspaceDetail = () => {
                 onContactNow={handleContactNow}
               />
               
+              {/* Availability Widget */}
               <AvailabilityWidget
                 availableSeats={workspace.availableSeats}
                 totalSeats={workspace.totalSeats}

@@ -67,108 +67,106 @@ const UserBookings = () => {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'confirmed':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 border-green-200';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'completed':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 border-red-200';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
   const getPaymentStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'paid':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 border-green-200';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'failed':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 border-red-200';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
   const handleDownloadInvoice = (bookingId: string) => {
-    // Simulate invoice download
     console.log(`Downloading invoice for booking ${bookingId}`);
   };
 
   const handleContactSupport = (bookingId: string) => {
-    // Simulate contact support
     console.log(`Contacting support for booking ${bookingId}`);
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">My Bookings</h2>
-        <div className="text-sm text-gray-600">
+        <h2 className="text-2xl font-bold text-foreground">My Bookings</h2>
+        <div className="text-sm text-muted-foreground">
           Total bookings: {mockBookings.length}
         </div>
       </div>
 
       <div className="space-y-4">
         {mockBookings.map((booking) => (
-          <div key={booking.id} className="bg-white border rounded-lg p-6 shadow-sm">
+          <div key={booking.id} className="bg-card border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-1">{booking.workspaceName}</h3>
-                <div className="flex items-center text-gray-600 text-sm">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  {booking.address}
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{booking.workspaceName}</h3>
+                <div className="flex items-start text-muted-foreground text-sm">
+                  <MapPin className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
+                  <span>{booking.address}</span>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
                 <Badge className={getStatusColor(booking.bookingStatus)}>
                   {booking.bookingStatus}
                 </Badge>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="h-8 w-8">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </div>
             </div>
 
             {/* Booking Details Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
               <div className="space-y-1">
-                <div className="flex items-center text-gray-600 text-sm">
+                <div className="flex items-center text-muted-foreground text-sm">
                   <CalendarDays className="h-4 w-4 mr-1" />
                   Date & Time
                 </div>
-                <p className="font-medium">{booking.date}</p>
-                <p className="text-sm text-gray-600">{booking.time}</p>
+                <p className="font-medium text-foreground">{booking.date}</p>
+                <p className="text-sm text-muted-foreground">{booking.time}</p>
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center text-gray-600 text-sm">
+                <div className="flex items-center text-muted-foreground text-sm">
                   <Clock className="h-4 w-4 mr-1" />
                   Duration & Plan
                 </div>
-                <p className="font-medium">{booking.duration}</p>
-                <p className="text-sm text-gray-600">{booking.plan}</p>
+                <p className="font-medium text-foreground">{booking.duration}</p>
+                <p className="text-sm text-muted-foreground">{booking.plan}</p>
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center text-gray-600 text-sm">
+                <div className="flex items-center text-muted-foreground text-sm">
                   <Users className="h-4 w-4 mr-1" />
                   People & Amount
                 </div>
-                <p className="font-medium">{booking.numberOfPeople} people</p>
-                <p className="text-lg font-bold text-brand-600">₹{booking.totalAmount}</p>
+                <p className="font-medium text-foreground">{booking.numberOfPeople} people</p>
+                <p className="text-lg font-bold text-brand-600">₹{booking.totalAmount.toLocaleString()}</p>
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center text-gray-600 text-sm">
+                <div className="flex items-center text-muted-foreground text-sm">
                   <CreditCard className="h-4 w-4 mr-1" />
                   Payment
                 </div>
-                <p className="font-medium">{booking.paymentMethod}</p>
-                <Badge className={getPaymentStatusColor(booking.paymentStatus)}>
+                <p className="font-medium text-foreground text-sm">{booking.paymentMethod}</p>
+                <Badge className={getPaymentStatusColor(booking.paymentStatus) + " text-xs"}>
                   {booking.paymentStatus}
                 </Badge>
               </div>
@@ -177,29 +175,31 @@ const UserBookings = () => {
             <Separator className="my-4" />
 
             {/* Actions */}
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-600">
-                Booking ID: {booking.id} • Booked on {booking.createdAt}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="text-sm text-muted-foreground">
+                Booking ID: <span className="font-mono">{booking.id}</span> • Booked on {booking.createdAt}
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => handleDownloadInvoice(booking.id)}
+                  className="flex items-center gap-1"
                 >
-                  <Download className="h-4 w-4 mr-1" />
+                  <Download className="h-4 w-4" />
                   Invoice
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => handleContactSupport(booking.id)}
+                  className="flex items-center gap-1"
                 >
-                  <Phone className="h-4 w-4 mr-1" />
+                  <Phone className="h-4 w-4" />
                   Support
                 </Button>
                 {booking.bookingStatus === 'Confirmed' && booking.paymentStatus === 'Pending' && (
-                  <Button size="sm" className="bg-brand-600 hover:bg-brand-700">
+                  <Button size="sm" className="bg-brand-600 hover:bg-brand-700 text-white">
                     Pay Now
                   </Button>
                 )}
@@ -211,9 +211,9 @@ const UserBookings = () => {
 
       {mockBookings.length === 0 && (
         <div className="text-center py-12">
-          <CalendarDays className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-600 mb-2">No bookings yet</h3>
-          <p className="text-gray-500">Start by booking your first workspace!</p>
+          <CalendarDays className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-muted-foreground mb-2">No bookings yet</h3>
+          <p className="text-muted-foreground">Start by booking your first workspace!</p>
         </div>
       )}
     </div>

@@ -22,18 +22,34 @@ const AvailabilityWidget: React.FC<AvailabilityWidgetProps> = ({
   }
   
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-      <h3 className="text-xl font-semibold mb-4">Availability</h3>
+    <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
+      <h3 className="text-xl font-semibold mb-4 text-foreground">Availability</h3>
       
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-gray-500" />
-          <span className="font-medium">Available seats</span>
+        <div className="flex items-center gap-3">
+          <Users className="h-5 w-5 text-brand-600" />
+          <span className="font-medium text-foreground">Available seats</span>
         </div>
         
-        <div className={cn("px-3 py-1 rounded-full text-sm font-medium border", statusColor)}>
+        <div className={cn("px-3 py-2 rounded-full text-sm font-medium border", statusColor)}>
           {availableSeats} / {totalSeats}
         </div>
+      </div>
+      
+      {/* Progress Bar */}
+      <div className="mt-4">
+        <div className="w-full bg-muted rounded-full h-2">
+          <div 
+            className={cn(
+              "h-2 rounded-full transition-all duration-300",
+              availability > 0.5 ? "bg-green-500" : availability > 0.2 ? "bg-yellow-500" : "bg-red-500"
+            )}
+            style={{ width: `${(availability * 100)}%` }}
+          />
+        </div>
+        <p className="text-xs text-muted-foreground mt-2">
+          {Math.round(availability * 100)}% available
+        </p>
       </div>
     </div>
   );
