@@ -249,19 +249,19 @@ const WorkspaceDetail = () => {
           </div>
         </div>
         
-        {/* Image Gallery */}
-        <div className="container mx-auto px-4 py-8">
-          <ImageGallery 
-            images={workspace.images}
-            hasVideoTour={workspace.hasVideoTour}
-            onWatchVideo={handleWatchVideo}
-          />
-        </div>
-        
         {/* Main Content */}
-        <div className="container mx-auto px-4 pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Content */}
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            {/* Left Content - Image Gallery (Reduced Width) */}
+            <div className="lg:col-span-2">
+              <ImageGallery 
+                images={workspace.images}
+                hasVideoTour={workspace.hasVideoTour}
+                onWatchVideo={handleWatchVideo}
+              />
+            </div>
+            
+            {/* Middle Content - Details */}
             <div className="lg:col-span-2">
               <Tabs defaultValue="details" className="space-y-8">
                 <TabsList>
@@ -385,13 +385,10 @@ const WorkspaceDetail = () => {
                   </div>
                 </TabsContent>
               </Tabs>
-              
-              {/* Suggested Workspaces */}
-              <WorkspaceSuggestions workspaces={workspace.suggestedWorkspaces} />
             </div>
             
-            {/* Right Sidebar - Booking */}
-            <div className="space-y-6">
+            {/* Right Sidebar - Pricing Table */}
+            <div className="lg:col-span-1 space-y-6">
               <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm sticky top-20">
                 <h2 className="text-xl font-semibold mb-4">Select a plan</h2>
                 <p className="text-sm text-gray-500 mb-6">Choose a plan that works for you</p>
@@ -423,6 +420,11 @@ const WorkspaceDetail = () => {
                 totalSeats={workspace.totalSeats}
               />
             </div>
+          </div>
+          
+          {/* Suggested Workspaces */}
+          <div className="mt-12">
+            <WorkspaceSuggestions workspaces={workspace.suggestedWorkspaces} />
           </div>
         </div>
       </main>
