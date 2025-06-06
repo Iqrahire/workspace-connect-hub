@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -249,20 +250,21 @@ const WorkspaceDetail = () => {
           </div>
         </div>
         
-        {/* Main Content */}
+        {/* Main Content - Two Section Flex Layout */}
         <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            {/* Left Content - Image Gallery (Reduced Width) */}
-            <div className="lg:col-span-2">
-              <ImageGallery 
-                images={workspace.images}
-                hasVideoTour={workspace.hasVideoTour}
-                onWatchVideo={handleWatchVideo}
-              />
-            </div>
-            
-            {/* Middle Content - Details */}
-            <div className="lg:col-span-2">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left Section - Image Gallery and Details */}
+            <div className="flex-1">
+              {/* Image Gallery */}
+              <div className="mb-8">
+                <ImageGallery 
+                  images={workspace.images}
+                  hasVideoTour={workspace.hasVideoTour}
+                  onWatchVideo={handleWatchVideo}
+                />
+              </div>
+              
+              {/* Details Tabs */}
               <Tabs defaultValue="details" className="space-y-8">
                 <TabsList>
                   <TabsTrigger value="details">Details</TabsTrigger>
@@ -387,8 +389,8 @@ const WorkspaceDetail = () => {
               </Tabs>
             </div>
             
-            {/* Right Sidebar - Pricing Table */}
-            <div className="lg:col-span-1 space-y-6">
+            {/* Right Section - Pricing Table */}
+            <div className="w-full lg:w-96 space-y-6">
               <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm sticky top-20">
                 <h2 className="text-xl font-semibold mb-4">Select a plan</h2>
                 <p className="text-sm text-gray-500 mb-6">Choose a plan that works for you</p>
