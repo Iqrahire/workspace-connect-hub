@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Star, MapPin, Wifi, Coffee, AirVent, ParkingMeter, SquareUser, Heart, Share2, Clock, Play, Phone, Mail } from 'lucide-react';
 import ImageGallery from '@/components/ImageGallery';
 import PlanCard, { WorkspacePlan } from '@/components/PlanCard';
@@ -442,19 +443,21 @@ const WorkspaceDetail = () => {
                 <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
                 <p className="text-sm text-muted-foreground mb-6">Choose a plan that works for you</p>
                 
-                <div className="space-y-4">
-                  {workspace.plans.map((plan) => (
-                    <PlanCard
-                      key={plan.id}
-                      plan={plan}
-                      isSelected={selectedPlan === plan.id}
-                      onSelect={() => handlePlanSelect(plan.id)}
-                      onBookNow={handleBookNow}
-                      workspaceName={workspace.name}
-                      workspaceAddress={workspace.address}
-                    />
-                  ))}
-                </div>
+                <ScrollArea className="h-[400px] pr-2">
+                  <div className="space-y-4">
+                    {workspace.plans.map((plan) => (
+                      <PlanCard
+                        key={plan.id}
+                        plan={plan}
+                        isSelected={selectedPlan === plan.id}
+                        onSelect={() => handlePlanSelect(plan.id)}
+                        onBookNow={handleBookNow}
+                        workspaceName={workspace.name}
+                        workspaceAddress={workspace.address}
+                      />
+                    ))}
+                  </div>
+                </ScrollArea>
               </div>
               
               {/* Contact Information */}
@@ -481,19 +484,21 @@ const WorkspaceDetail = () => {
               <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
               <p className="text-sm text-muted-foreground mb-6">Choose a plan that works for you</p>
               
-              <div className="space-y-4">
-                {workspace.plans.map((plan) => (
-                  <PlanCard
-                    key={plan.id}
-                    plan={plan}
-                    isSelected={selectedPlan === plan.id}
-                    onSelect={() => handlePlanSelect(plan.id)}
-                    onBookNow={handleBookNow}
-                    workspaceName={workspace.name}
-                    workspaceAddress={workspace.address}
-                  />
-                ))}
-              </div>
+              <ScrollArea className="h-[500px] pr-2">
+                <div className="space-y-4">
+                  {workspace.plans.map((plan) => (
+                    <PlanCard
+                      key={plan.id}
+                      plan={plan}
+                      isSelected={selectedPlan === plan.id}
+                      onSelect={() => handlePlanSelect(plan.id)}
+                      onBookNow={handleBookNow}
+                      workspaceName={workspace.name}
+                      workspaceAddress={workspace.address}
+                    />
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
           </div>
           
