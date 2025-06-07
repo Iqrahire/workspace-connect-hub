@@ -436,7 +436,7 @@ const WorkspaceDetail = () => {
             </div>
             
             {/* Right Section - Desktop Sidebar */}
-            <div className="hidden lg:flex w-full xl:w-96 flex-col space-y-6">
+            <div className="w-full xl:w-96 flex-col space-y-6 hidden lg:flex">
               {/* Pricing Section */}
               <div className="bg-card rounded-lg border border-border p-6 shadow-sm sticky top-6">
                 <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
