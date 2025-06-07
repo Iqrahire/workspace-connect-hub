@@ -307,9 +307,10 @@ const WorkspaceDetail = () => {
               
               {/* Details Tabs */}
               <Tabs defaultValue="details" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="amenities">Amenities</TabsTrigger>
+                  <TabsTrigger value="contact">Contact</TabsTrigger>
                   <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
                 
@@ -386,6 +387,24 @@ const WorkspaceDetail = () => {
                     </div>
                   </div>
                 </TabsContent>
+
+                {/* Contact Tab */}
+                <TabsContent value="contact">
+                  <div className="space-y-6">
+                    <ContactBlock
+                      contactName={workspace.contactName}
+                      contactPhone={workspace.contactPhone}
+                      contactEmail={workspace.contactEmail}
+                      openHours={workspace.openHours}
+                      openDays={workspace.openDays}
+                      onContactNow={handleContactNow}
+                    />
+                    <AvailabilityWidget
+                      availableSeats={workspace.availableSeats}
+                      totalSeats={workspace.totalSeats}
+                    />
+                  </div>
+                </TabsContent>
                 
                 {/* Reviews Tab */}
                 <TabsContent value="reviews" id="reviews">
@@ -438,13 +457,15 @@ const WorkspaceDetail = () => {
             
             {/* Right Section - Desktop Sidebar */}
             <div className="hidden lg:flex w-full xl:w-96 flex-col space-y-6">
-              {/* Pricing Section */}
-              <div className="bg-card rounded-lg border border-border p-6 shadow-sm sticky top-6">
-                <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
-                <p className="text-sm text-muted-foreground mb-6">Choose a plan that works for you</p>
+              {/* Pricing Section - Improved UX */}
+              <div className="bg-card rounded-lg border border-border shadow-sm sticky top-6">
+                <div className="p-6 border-b border-border">
+                  <h2 className="text-xl font-semibold text-foreground">Choose Your Plan</h2>
+                  <p className="text-sm text-muted-foreground mt-1">Select the perfect plan for your needs</p>
+                </div>
                 
-                <ScrollArea className="h-[400px] pr-2">
-                  <div className="space-y-4">
+                <div className="p-4">
+                  <div className="space-y-3 max-h-80 overflow-y-auto">
                     {workspace.plans.map((plan) => (
                       <PlanCard
                         key={plan.id}
@@ -457,7 +478,7 @@ const WorkspaceDetail = () => {
                       />
                     ))}
                   </div>
-                </ScrollArea>
+                </div>
               </div>
               
               {/* Contact Information */}
@@ -478,14 +499,16 @@ const WorkspaceDetail = () => {
             </div>
           </div>
 
-          {/* Mobile Pricing Section */}
+          {/* Mobile Pricing Section - Improved */}
           <div className="lg:hidden mt-8">
-            <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
-              <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
-              <p className="text-sm text-muted-foreground mb-6">Choose a plan that works for you</p>
+            <div className="bg-card rounded-lg border border-border shadow-sm">
+              <div className="p-6 border-b border-border">
+                <h2 className="text-xl font-semibold text-foreground">Choose Your Plan</h2>
+                <p className="text-sm text-muted-foreground mt-1">Select the perfect plan for your needs</p>
+              </div>
               
-              <ScrollArea className="h-[500px] pr-2">
-                <div className="space-y-4">
+              <div className="p-4">
+                <div className="space-y-3 max-h-96 overflow-y-auto">
                   {workspace.plans.map((plan) => (
                     <PlanCard
                       key={plan.id}
@@ -498,7 +521,7 @@ const WorkspaceDetail = () => {
                     />
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           </div>
           
