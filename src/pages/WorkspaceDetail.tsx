@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -307,11 +306,12 @@ const WorkspaceDetail = () => {
               
               {/* Details Tabs */}
               <Tabs defaultValue="details" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="amenities">Amenities</TabsTrigger>
                   <TabsTrigger value="contact">Contact</TabsTrigger>
                   <TabsTrigger value="reviews">Reviews</TabsTrigger>
+                  <TabsTrigger value="availability">Available</TabsTrigger>
                 </TabsList>
                 
                 {/* Details Tab */}
@@ -390,20 +390,22 @@ const WorkspaceDetail = () => {
 
                 {/* Contact Tab */}
                 <TabsContent value="contact">
-                  <div className="space-y-6">
-                    <ContactBlock
-                      contactName={workspace.contactName}
-                      contactPhone={workspace.contactPhone}
-                      contactEmail={workspace.contactEmail}
-                      openHours={workspace.openHours}
-                      openDays={workspace.openDays}
-                      onContactNow={handleContactNow}
-                    />
-                    <AvailabilityWidget
-                      availableSeats={workspace.availableSeats}
-                      totalSeats={workspace.totalSeats}
-                    />
-                  </div>
+                  <ContactBlock
+                    contactName={workspace.contactName}
+                    contactPhone={workspace.contactPhone}
+                    contactEmail={workspace.contactEmail}
+                    openHours={workspace.openHours}
+                    openDays={workspace.openDays}
+                    onContactNow={handleContactNow}
+                  />
+                </TabsContent>
+
+                {/* Availability Tab */}
+                <TabsContent value="availability">
+                  <AvailabilityWidget
+                    availableSeats={workspace.availableSeats}
+                    totalSeats={workspace.totalSeats}
+                  />
                 </TabsContent>
                 
                 {/* Reviews Tab */}
@@ -455,51 +457,37 @@ const WorkspaceDetail = () => {
               </Tabs>
             </div>
             
-            {/* Right Section - Desktop Sidebar */}
-            <div className="hidden lg:flex w-full xl:w-96 flex-col space-y-6">
-              {/* Pricing Section - Improved UX */}
-              <div className="bg-card rounded-lg border border-border shadow-sm sticky top-6">
-                <div className="p-6 border-b border-border">
+            {/* Right Section - Desktop Sidebar - Only Pricing */}
+            <div className="hidden lg:flex w-full xl:w-96">
+              {/* Pricing Section with Dedicated Scroll */}
+              <div className="bg-card rounded-lg border border-border shadow-sm sticky top-6 w-full h-fit max-h-[calc(100vh-120px)] flex flex-col">
+                <div className="p-6 border-b border-border flex-shrink-0">
                   <h2 className="text-xl font-semibold text-foreground">Choose Your Plan</h2>
                   <p className="text-sm text-muted-foreground mt-1">Select the perfect plan for your needs</p>
                 </div>
                 
-                <div className="p-4">
-                  <div className="space-y-3 max-h-80 overflow-y-auto">
-                    {workspace.plans.map((plan) => (
-                      <PlanCard
-                        key={plan.id}
-                        plan={plan}
-                        isSelected={selectedPlan === plan.id}
-                        onSelect={() => handlePlanSelect(plan.id)}
-                        onBookNow={handleBookNow}
-                        workspaceName={workspace.name}
-                        workspaceAddress={workspace.address}
-                      />
-                    ))}
-                  </div>
+                <div className="flex-1 overflow-hidden">
+                  <ScrollArea className="h-full">
+                    <div className="p-4 space-y-3">
+                      {workspace.plans.map((plan) => (
+                        <PlanCard
+                          key={plan.id}
+                          plan={plan}
+                          isSelected={selectedPlan === plan.id}
+                          onSelect={() => handlePlanSelect(plan.id)}
+                          onBookNow={handleBookNow}
+                          workspaceName={workspace.name}
+                          workspaceAddress={workspace.address}
+                        />
+                      ))}
+                    </div>
+                  </ScrollArea>
                 </div>
               </div>
-              
-              {/* Contact Information */}
-              <ContactBlock
-                contactName={workspace.contactName}
-                contactPhone={workspace.contactPhone}
-                contactEmail={workspace.contactEmail}
-                openHours={workspace.openHours}
-                openDays={workspace.openDays}
-                onContactNow={handleContactNow}
-              />
-              
-              {/* Availability Widget */}
-              <AvailabilityWidget
-                availableSeats={workspace.availableSeats}
-                totalSeats={workspace.totalSeats}
-              />
             </div>
           </div>
 
-          {/* Mobile Pricing Section - Improved */}
+          {/* Mobile Pricing Section */}
           <div className="lg:hidden mt-8">
             <div className="bg-card rounded-lg border border-border shadow-sm">
               <div className="p-6 border-b border-border">
@@ -508,7 +496,7 @@ const WorkspaceDetail = () => {
               </div>
               
               <div className="p-4">
-                <div className="space-y-3 max-h-96 overflow-y-auto">
+                <div className="space-y-3">
                   {workspace.plans.map((plan) => (
                     <PlanCard
                       key={plan.id}
