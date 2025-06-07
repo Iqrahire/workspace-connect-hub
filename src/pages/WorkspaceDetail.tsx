@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Star, MapPin, Wifi, Coffee, AirVent, ParkingMeter, SquareUser, Heart, Share2, Clock, Play } from 'lucide-react';
+import { Star, MapPin, Wifi, Coffee, AirVent, ParkingMeter, SquareUser, Heart, Share2, Clock, Play, Phone, Mail } from 'lucide-react';
 import ImageGallery from '@/components/ImageGallery';
 import PlanCard, { WorkspacePlan } from '@/components/PlanCard';
 import ContactBlock from '@/components/ContactBlock';
@@ -203,7 +203,7 @@ const WorkspaceDetail = () => {
         {/* Header Section */}
         <div className="bg-card border-b border-border">
           <div className="container mx-auto px-4 py-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   {workspace.isPremium && (
@@ -211,7 +211,7 @@ const WorkspaceDetail = () => {
                       Premium
                     </Badge>
                   )}
-                  <h1 className="text-2xl md:text-3xl font-bold text-foreground">{workspace.name}</h1>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-foreground">{workspace.name}</h1>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm">
                   <div className="flex items-center text-muted-foreground">
@@ -253,6 +253,26 @@ const WorkspaceDetail = () => {
             </div>
           </div>
         </div>
+
+        {/* Quick Info Bar - Mobile/Tablet Only */}
+        <div className="lg:hidden bg-muted/30 border-b border-border">
+          <div className="container mx-auto px-4 py-3">
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="flex items-center justify-center gap-2 text-sm">
+                <Phone className="h-4 w-4 text-brand-600" />
+                <a href={`tel:${workspace.contactPhone}`} className="text-brand-600 font-medium">
+                  Call Now
+                </a>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm">
+                <span className="text-muted-foreground">Available:</span>
+                <span className="font-medium text-green-600">
+                  {workspace.availableSeats}/{workspace.totalSeats}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
         
         {/* Main Content */}
         <div className="container mx-auto px-4 py-6 lg:py-8">
@@ -265,6 +285,22 @@ const WorkspaceDetail = () => {
                   images={workspace.images}
                   hasVideoTour={workspace.hasVideoTour}
                   onWatchVideo={handleWatchVideo}
+                />
+              </div>
+              
+              {/* Mobile Contact & Availability Cards */}
+              <div className="lg:hidden space-y-4 mb-6">
+                <ContactBlock
+                  contactName={workspace.contactName}
+                  contactPhone={workspace.contactPhone}
+                  contactEmail={workspace.contactEmail}
+                  openHours={workspace.openHours}
+                  openDays={workspace.openDays}
+                  onContactNow={handleContactNow}
+                />
+                <AvailabilityWidget
+                  availableSeats={workspace.availableSeats}
+                  totalSeats={workspace.totalSeats}
                 />
               </div>
               
@@ -399,10 +435,10 @@ const WorkspaceDetail = () => {
               </Tabs>
             </div>
             
-            {/* Right Section - Sidebar */}
-            <div className="w-full xl:w-96 space-y-6">
+            {/* Right Section - Desktop Sidebar */}
+            <div className="hidden lg:flex w-full xl:w-96 flex-col space-y-6">
               {/* Pricing Section */}
-              <div className="bg-card rounded-lg border border-border p-6 shadow-sm xl:sticky xl:top-6">
+              <div className="bg-card rounded-lg border border-border p-6 shadow-sm sticky top-6">
                 <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
                 <p className="text-sm text-muted-foreground mb-6">Choose a plan that works for you</p>
                 
@@ -436,6 +472,28 @@ const WorkspaceDetail = () => {
                 availableSeats={workspace.availableSeats}
                 totalSeats={workspace.totalSeats}
               />
+            </div>
+          </div>
+
+          {/* Mobile Pricing Section */}
+          <div className="lg:hidden mt-8">
+            <div className="bg-card rounded-lg border border-border p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-2 text-foreground">Select a plan</h2>
+              <p className="text-sm text-muted-foreground mb-6">Choose a plan that works for you</p>
+              
+              <div className="space-y-4">
+                {workspace.plans.map((plan) => (
+                  <PlanCard
+                    key={plan.id}
+                    plan={plan}
+                    isSelected={selectedPlan === plan.id}
+                    onSelect={() => handlePlanSelect(plan.id)}
+                    onBookNow={handleBookNow}
+                    workspaceName={workspace.name}
+                    workspaceAddress={workspace.address}
+                  />
+                ))}
+              </div>
             </div>
           </div>
           
