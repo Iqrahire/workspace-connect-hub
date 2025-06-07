@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -18,6 +17,7 @@ import {
   Clock
 } from 'lucide-react';
 import { toast } from '@/components/ui/sonner';
+import { cn } from '@/lib/utils';
 
 interface BookingDetails {
   workspaceName: string;
