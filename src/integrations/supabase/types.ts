@@ -9,7 +9,152 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_type: string
+          created_at: string | null
+          end_date: string
+          id: string
+          start_date: string
+          status: string | null
+          total_amount: number
+          updated_at: string | null
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          booking_type: string
+          created_at?: string | null
+          end_date: string
+          id?: string
+          start_date: string
+          status?: string | null
+          total_amount: number
+          updated_at?: string | null
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          booking_type?: string
+          created_at?: string | null
+          end_date?: string
+          id?: string
+          start_date?: string
+          status?: string | null
+          total_amount?: number
+          updated_at?: string | null
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      workspaces: {
+        Row: {
+          address: string | null
+          amenities: string[] | null
+          area: string
+          capacity: number | null
+          city: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          description: string | null
+          has_video_tour: boolean | null
+          id: string
+          images: string[] | null
+          is_premium: boolean | null
+          name: string
+          price_per_day: number
+          price_per_month: number | null
+          price_per_week: number | null
+          rating: number | null
+          review_count: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          amenities?: string[] | null
+          area: string
+          capacity?: number | null
+          city: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          has_video_tour?: boolean | null
+          id?: string
+          images?: string[] | null
+          is_premium?: boolean | null
+          name: string
+          price_per_day: number
+          price_per_month?: number | null
+          price_per_week?: number | null
+          rating?: number | null
+          review_count?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          amenities?: string[] | null
+          area?: string
+          capacity?: number | null
+          city?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          has_video_tour?: boolean | null
+          id?: string
+          images?: string[] | null
+          is_premium?: boolean | null
+          name?: string
+          price_per_day?: number
+          price_per_month?: number | null
+          price_per_week?: number | null
+          rating?: number | null
+          review_count?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

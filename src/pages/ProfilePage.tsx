@@ -1,5 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,15 +19,82 @@ import {
   LogOut
 } from 'lucide-react';
 import UserBookings from '@/components/UserBookings';
+import { toast } from 'sonner';
+
+interface Profile {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  created_at: string;
+}
 
 const ProfilePage = () => {
-  const [user] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+91 9876543210',
-    joinDate: 'January 2024',
-    totalBookings: 12,
-    status: 'Premium Member'
+  const { user, signOut, loading: authLoading } = useAuth();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/auth');
+    } else if (user) {
+      fetchProfile();
+    }
+  }, [user, authLoading, navigate]);
+
+  const fetchProfile = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        toast.error('Failed to load profile');
+      } else {
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Failed to load profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success('Signed out successfully');
+    navigate('/');
+  };
+
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600 mx-auto"></div>
+            <p className="text-gray-600 mt-2">Loading your profile...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!user || !profile) {
+    return null;
+  }
+
+  const joinDate = new Date(profile.created_at).toLocaleDateString('en-IN', {
+    year: 'numeric',
+    month: 'long'
   });
 
   return (
@@ -36,23 +106,21 @@ const ProfilePage = () => {
           <div className="bg-white rounded-lg border p-6 mb-8">
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} />
-                <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.full_name}`} />
+                <AvatarFallback>{profile.full_name?.split(' ').map(n => n[0]).join('') || 'U'}</AvatarFallback>
               </Avatar>
               
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-2">
-                  <h1 className="text-2xl font-bold">{user.name}</h1>
+                  <h1 className="text-2xl font-bold">{profile.full_name || 'User'}</h1>
                   <Badge className="bg-brand-100 text-brand-800">
-                    {user.status}
+                    Member
                   </Badge>
                 </div>
-                <p className="text-gray-600 mb-1">{user.email}</p>
-                <p className="text-gray-600 mb-2">{user.phone}</p>
+                <p className="text-gray-600 mb-1">{profile.email}</p>
+                {profile.phone && <p className="text-gray-600 mb-2">{profile.phone}</p>}
                 <div className="flex items-center space-x-4 text-sm text-gray-500">
-                  <span>Joined {user.joinDate}</span>
-                  <span>•</span>
-                  <span>{user.totalBookings} bookings</span>
+                  <span>Joined {joinDate}</span>
                 </div>
               </div>
               
@@ -160,7 +228,12 @@ const ProfilePage = () => {
                         <p className="text-sm text-gray-500">Sign out of your account</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm" className="text-red-600 border-red-600 hover:bg-red-50">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-600 border-red-600 hover:bg-red-50"
+                      onClick={handleSignOut}
+                    >
                       Sign Out
                     </Button>
                   </div>
