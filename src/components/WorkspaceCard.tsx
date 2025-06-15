@@ -16,6 +16,7 @@ export interface WorkspaceCardProps {
   imageUrl: string;
   isPremium?: boolean;
   hasVideoTour?: boolean;
+  viewMode?: 'grid' | 'list';
 }
 
 const amenityIcons: Record<string, JSX.Element> = {
@@ -45,7 +46,8 @@ const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
   amenities,
   imageUrl,
   isPremium = false,
-  hasVideoTour = false
+  hasVideoTour = false,
+  viewMode = 'grid'
 }) => {
   return (
     <Link to={`/workspace/${id}`}>
