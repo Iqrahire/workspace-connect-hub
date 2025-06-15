@@ -20,11 +20,11 @@ import { toast } from 'sonner';
 interface Booking {
   id: string;
   workspace_id: string;
-  booking_type: 'daily' | 'weekly' | 'monthly';
+  booking_type: string;
   start_date: string;
   end_date: string;
   total_amount: number;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  status: string;
   created_at: string;
   workspaces: {
     name: string;
