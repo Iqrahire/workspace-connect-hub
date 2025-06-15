@@ -15,7 +15,7 @@ interface ImageGalleryProps {
 }
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({
-  images,
+  images = [],
   hasVideoTour = false,
   onWatchVideo,
 }) => {
