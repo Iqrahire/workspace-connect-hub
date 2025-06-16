@@ -57,10 +57,10 @@ const DashboardPage = () => {
   }, [user, authLoading, navigate]);
 
   // Fetch user's workspaces
-  const { data: workspaces = [], isLoading: workspacesLoading, refetch } = useQuery({
+  const workspacesQuery = useQuery<DashboardWorkspace[]>({
     queryKey: ['user-workspaces', user?.id],
     queryFn: async () => {
-      if (!user) return [] as DashboardWorkspace[];
+      if (!user) return [];
       const { data, error } = await supabase
         .from('workspaces')
         .select('*')
@@ -71,16 +71,20 @@ const DashboardPage = () => {
         console.error('Error fetching workspaces:', error);
         throw error;
       }
-      return (data || []) as DashboardWorkspace[];
+      return data as DashboardWorkspace[];
     },
     enabled: !!user,
   });
 
+  const workspaces = workspacesQuery.data || [];
+  const workspacesLoading = workspacesQuery.isLoading;
+  const refetch = workspacesQuery.refetch;
+
   // Fetch bookings for user's workspaces
-  const { data: bookings = [] } = useQuery({
-    queryKey: ['workspace-bookings', user?.id],
+  const bookingsQuery = useQuery<DashboardBooking[]>({
+    queryKey: ['workspace-bookings', user?.id, workspaces.length],
     queryFn: async () => {
-      if (!user || workspaces.length === 0) return [] as DashboardBooking[];
+      if (!user || workspaces.length === 0) return [];
       const workspaceIds = workspaces.map(w => w.id);
       const { data, error } = await supabase
         .from('bookings')
@@ -92,10 +96,12 @@ const DashboardPage = () => {
         console.error('Error fetching bookings:', error);
         throw error;
       }
-      return (data || []) as DashboardBooking[];
+      return data as DashboardBooking[];
     },
     enabled: !!user && workspaces.length > 0,
   });
+
+  const bookings = bookingsQuery.data || [];
 
   // Calculate analytics
   const totalRevenue = bookings.reduce((sum, booking) => sum + booking.total_amount, 0);
