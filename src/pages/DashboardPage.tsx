@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -57,9 +58,9 @@ const DashboardPage = () => {
   }, [user, authLoading, navigate]);
 
   // Fetch user's workspaces
-  const workspacesQuery = useQuery<DashboardWorkspace[]>({
+  const workspacesQuery = useQuery({
     queryKey: ['user-workspaces', user?.id],
-    queryFn: async () => {
+    queryFn: async (): Promise<DashboardWorkspace[]> => {
       if (!user) return [];
       const { data, error } = await supabase
         .from('workspaces')
@@ -81,9 +82,9 @@ const DashboardPage = () => {
   const refetch = workspacesQuery.refetch;
 
   // Fetch bookings for user's workspaces
-  const bookingsQuery = useQuery<DashboardBooking[]>({
+  const bookingsQuery = useQuery({
     queryKey: ['workspace-bookings', user?.id, workspaces.length],
-    queryFn: async () => {
+    queryFn: async (): Promise<DashboardBooking[]> => {
       if (!user || workspaces.length === 0) return [];
       const workspaceIds = workspaces.map(w => w.id);
       const { data, error } = await supabase
