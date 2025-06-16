@@ -57,23 +57,27 @@ const DashboardPage = () => {
     }
   }, [user, authLoading, navigate]);
 
-  // Fetch user's workspaces
+  // Fetch user's workspaces with simplified typing
+  const fetchWorkspaces = async () => {
+    if (!user) return [] as DashboardWorkspace[];
+    
+    const { data, error } = await supabase
+      .from('workspaces')
+      .select('*')
+      .eq('owner_id', user.id)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching workspaces:', error);
+      throw error;
+    }
+    
+    return (data || []) as DashboardWorkspace[];
+  };
+
   const workspacesQuery = useQuery({
     queryKey: ['user-workspaces', user?.id],
-    queryFn: async (): Promise<DashboardWorkspace[]> => {
-      if (!user) return [];
-      const { data, error } = await supabase
-        .from('workspaces')
-        .select('*')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching workspaces:', error);
-        throw error;
-      }
-      return data as DashboardWorkspace[];
-    },
+    queryFn: fetchWorkspaces,
     enabled: !!user,
   });
 
@@ -81,24 +85,28 @@ const DashboardPage = () => {
   const workspacesLoading = workspacesQuery.isLoading;
   const refetch = workspacesQuery.refetch;
 
-  // Fetch bookings for user's workspaces
+  // Fetch bookings for user's workspaces with simplified typing
+  const fetchBookings = async () => {
+    if (!user || workspaces.length === 0) return [] as DashboardBooking[];
+    
+    const workspaceIds = workspaces.map(w => w.id);
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .in('workspace_id', workspaceIds)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching bookings:', error);
+      throw error;
+    }
+    
+    return (data || []) as DashboardBooking[];
+  };
+
   const bookingsQuery = useQuery({
     queryKey: ['workspace-bookings', user?.id, workspaces.length],
-    queryFn: async (): Promise<DashboardBooking[]> => {
-      if (!user || workspaces.length === 0) return [];
-      const workspaceIds = workspaces.map(w => w.id);
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('*')
-        .in('workspace_id', workspaceIds)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching bookings:', error);
-        throw error;
-      }
-      return data as DashboardBooking[];
-    },
+    queryFn: fetchBookings,
     enabled: !!user && workspaces.length > 0,
   });
 
