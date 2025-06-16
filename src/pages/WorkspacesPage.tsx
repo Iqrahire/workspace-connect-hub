@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
@@ -12,80 +14,6 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import WorkspaceCard from '@/components/WorkspaceCard';
 import MobileFilterDrawer from '@/components/MobileFilterDrawer';
-
-// Mock data for workspaces
-const workspaces = [
-  {
-    id: 1,
-    name: 'WeWork Galaxy',
-    city: 'Bangalore',
-    area: 'Residency Road',
-    rating: 4.8,
-    reviews: 120,
-    pricePerDay: 599,
-    amenities: ['wifi', 'coffee', 'ac', 'parking', 'meeting'],
-    imageUrl: 'https://images.unsplash.com/photo-1604328698692-f76ea9498e76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-    isPremium: true,
-    hasVideoTour: true
-  },
-  {
-    id: 2,
-    name: 'Innov8 Vikhroli',
-    city: 'Mumbai',
-    area: 'Vikhroli West',
-    rating: 4.6,
-    reviews: 95,
-    pricePerDay: 499,
-    amenities: ['wifi', 'coffee', 'ac', 'meeting'],
-    imageUrl: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-    isPremium: true
-  },
-  {
-    id: 3,
-    name: 'Awfis Cyber City',
-    city: 'Delhi',
-    area: 'Gurugram',
-    rating: 4.7,
-    reviews: 108,
-    pricePerDay: 549,
-    amenities: ['wifi', 'coffee', 'ac', 'parking'],
-    imageUrl: 'https://images.unsplash.com/photo-1564069114553-7215e1ff1890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-    hasVideoTour: true
-  },
-  {
-    id: 4,
-    name: '91springboard Koramangala',
-    city: 'Bangalore',
-    area: 'Koramangala',
-    rating: 4.5,
-    reviews: 89,
-    pricePerDay: 449,
-    amenities: ['wifi', 'coffee', 'ac', 'meeting'],
-    imageUrl: 'https://images.unsplash.com/photo-1572025442646-866d16c84a54?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    id: 5,
-    name: 'Regus Express',
-    city: 'Chennai',
-    area: 'T Nagar',
-    rating: 4.4,
-    reviews: 72,
-    pricePerDay: 399,
-    amenities: ['wifi', 'ac', 'meeting'],
-    imageUrl: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    id: 6,
-    name: 'Smartworks Kolkata',
-    city: 'Kolkata',
-    area: 'Salt Lake',
-    rating: 4.3,
-    reviews: 65,
-    pricePerDay: 349,
-    amenities: ['wifi', 'coffee', 'ac'],
-    imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
-  },
-];
 
 const amenityIcons: Record<string, JSX.Element> = {
   wifi: <Wifi className="h-4 w-4" />,
@@ -111,6 +39,20 @@ const WorkspacesPage = () => {
   });
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+  // Fetch workspaces from database
+  const { data: workspaces = [], isLoading, error } = useQuery({
+    queryKey: ['workspaces'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('workspaces')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
   // Filter workspaces based on search and filters
   const filteredWorkspaces = workspaces.filter(workspace => {
     // Search term filter
@@ -121,14 +63,14 @@ const WorkspacesPage = () => {
     }
 
     // Price range filter
-    if (workspace.pricePerDay < priceRange[0] || workspace.pricePerDay > priceRange[1]) {
+    if (workspace.price_per_day < priceRange[0] || workspace.price_per_day > priceRange[1]) {
       return false;
     }
 
     // Amenities filters
     const activeFilters = Object.entries(filters).filter(([_, isActive]) => isActive);
     if (activeFilters.length > 0) {
-      return activeFilters.every(([key, _]) => workspace.amenities.includes(key));
+      return activeFilters.every(([key, _]) => workspace.amenities?.includes(key));
     }
 
     return true;
@@ -153,12 +95,41 @@ const WorkspacesPage = () => {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p className="text-muted-foreground mt-2">Loading workspaces...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-destructive">Failed to load workspaces</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="flex-grow">
         {/* Modern Header Section */}
-        <div className="bg-gradient-to-br from-brand-50 to-brand-100/50 border-b border-border">
+        <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-b border-border">
           <div className="container mx-auto px-4 py-8 md:py-12">
             <div className="max-w-4xl mx-auto text-center mb-8">
               <Badge variant="secondary" className="mb-4 px-4 py-2">
@@ -169,7 +140,7 @@ const WorkspacesPage = () => {
               </h1>
               {locationParam && (
                 <p className="text-lg md:text-xl text-muted-foreground mb-6">
-                  Showing results for <span className="font-semibold text-brand-600">"{locationParam}"</span>
+                  Showing results for <span className="font-semibold text-primary">"{locationParam}"</span>
                 </p>
               )}
             </div>
@@ -181,7 +152,7 @@ const WorkspacesPage = () => {
                 <Input
                   type="text"
                   placeholder="Search by location, workspace name..."
-                  className="pl-12 pr-4 py-4 text-lg rounded-xl border-2 focus:border-brand-500 shadow-lg"
+                  className="pl-12 pr-4 py-4 text-lg rounded-xl border-2 focus:border-primary shadow-lg"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -299,9 +270,9 @@ const WorkspacesPage = () => {
                     </Button>
                   </div>
                   
-                  <Link to="/admin/dashboard">
+                  <Link to="/dashboard">
                     <Button size="sm" variant="outline" className="hidden sm:inline-flex">
-                      Admin Dashboard
+                      Dashboard
                     </Button>
                   </Link>
                 </div>
@@ -311,13 +282,23 @@ const WorkspacesPage = () => {
               {filteredWorkspaces.length > 0 ? (
                 <div className={`grid gap-6 ${
                   viewMode === 'grid' 
-                    ? 'gri-cols-1 md:grid-cols-2 xl:grid-cols-3' 
+                    ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3' 
                     : 'grid-cols-1'
                 }`}>
                   {filteredWorkspaces.map((workspace) => (
                     <WorkspaceCard 
                       key={workspace.id}
-                      {...workspace}
+                      id={workspace.id}
+                      name={workspace.name}
+                      city={workspace.city}
+                      area={workspace.area}
+                      rating={workspace.rating || 0}
+                      reviews={workspace.review_count || 0}
+                      pricePerDay={workspace.price_per_day}
+                      amenities={workspace.amenities || []}
+                      imageUrl={workspace.images?.[0] || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80'}
+                      isPremium={workspace.is_premium || false}
+                      hasVideoTour={workspace.has_video_tour || false}
                       viewMode={viewMode}
                     />
                   ))}
@@ -334,7 +315,7 @@ const WorkspacesPage = () => {
                     </p>
                     <Button 
                       variant="outline" 
-                      className="border-brand-600 text-brand-600 hover:bg-brand-600 hover:text-white"
+                      className="border-primary text-primary hover:bg-primary hover:text-white"
                       onClick={handleResetFilters}
                     >
                       Reset Filters

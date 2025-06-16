@@ -7,8 +7,11 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   User, 
   Calendar, 
@@ -16,7 +19,8 @@ import {
   Heart,
   Bell,
   CreditCard,
-  LogOut
+  LogOut,
+  Edit
 } from 'lucide-react';
 import UserBookings from '@/components/UserBookings';
 import { toast } from 'sonner';
@@ -33,6 +37,11 @@ const ProfilePage = () => {
   const { user, signOut, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    full_name: '',
+    phone: ''
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,12 +67,41 @@ const ProfilePage = () => {
         toast.error('Failed to load profile');
       } else {
         setProfile(data);
+        setEditForm({
+          full_name: data.full_name || '',
+          phone: data.phone || ''
+        });
       }
     } catch (error) {
       console.error('Error:', error);
       toast.error('Failed to load profile');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: editForm.full_name,
+          phone: editForm.phone,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      toast.success('Profile updated successfully');
+      setIsEditing(false);
+      fetchProfile();
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
     }
   };
 
@@ -79,7 +117,7 @@ const ProfilePage = () => {
         <Navbar />
         <main className="flex-grow bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="text-gray-600 mt-2">Loading your profile...</p>
           </div>
         </main>
@@ -113,7 +151,7 @@ const ProfilePage = () => {
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-2">
                   <h1 className="text-2xl font-bold">{profile.full_name || 'User'}</h1>
-                  <Badge className="bg-brand-100 text-brand-800">
+                  <Badge className="bg-primary/10 text-primary">
                     Member
                   </Badge>
                 </div>
@@ -124,10 +162,49 @@ const ProfilePage = () => {
                 </div>
               </div>
               
-              <Button variant="outline">
-                <Settings className="h-4 w-4 mr-2" />
-                Edit Profile
-              </Button>
+              <Dialog open={isEditing} onOpenChange={setIsEditing}>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Profile</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleUpdateProfile} className="space-y-4">
+                    <div>
+                      <Label htmlFor="full_name">Full Name</Label>
+                      <Input
+                        id="full_name"
+                        value={editForm.full_name}
+                        onChange={(e) => setEditForm(prev => ({ ...prev, full_name: e.target.value }))}
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        value={editForm.phone}
+                        onChange={(e) => setEditForm(prev => ({ ...prev, phone: e.target.value }))}
+                        placeholder="Your phone number"
+                      />
+                    </div>
+                    
+                    <div className="flex justify-end space-x-2">
+                      <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
+                        Cancel
+                      </Button>
+                      <Button type="submit">
+                        Save Changes
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
@@ -215,7 +292,7 @@ const ProfilePage = () => {
                         <p className="text-sm text-gray-500">Update your personal information</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
                       Edit
                     </Button>
                   </div>
