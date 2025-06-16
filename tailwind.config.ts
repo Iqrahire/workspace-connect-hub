@@ -54,28 +54,16 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				brand: {
-					50: '#f2f1fe',
-					100: '#e4e3fc',
-					200: '#cdc9fa',
-					300: '#afa8f5',
-					400: '#917eef',
-					500: '#7a5ee7',
-					600: '#4f46e5', // Primary brand color
-					700: '#3b37a2', // Secondary brand color
-					800: '#382f80',
-					900: '#322e69',
-				},
-				accent: {
-					50: '#fff7ed',
-					100: '#ffedd5',
-					200: '#fed7aa',
-					300: '#fdba74',
-					400: '#fb923c',
-					500: '#f97316',
-					600: '#ea580c',
-					700: '#c2410c',
-					800: '#9a3412',
-					900: '#7c2d12',
+					50: '#e6f7f1',
+					100: '#ccf0e3',
+					200: '#99e1c7',
+					300: '#66d1aa',
+					400: '#33c28e',
+					500: '#0cb36e', // Primary brand color
+					600: '#0a9f5f',
+					700: '#088a50',
+					800: '#067541',
+					900: '#046032',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
