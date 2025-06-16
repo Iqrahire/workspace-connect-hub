@@ -25,6 +25,27 @@ import {
 import { toast } from 'sonner';
 import AddWorkspaceDialog from '@/components/AddWorkspaceDialog';
 
+interface Workspace {
+  id: string;
+  name: string;
+  city: string;
+  area: string;
+  price_per_day: number;
+  images: string[] | null;
+  is_premium: boolean | null;
+  review_count: number | null;
+}
+
+interface Booking {
+  id: string;
+  workspace_id: string;
+  start_date: string;
+  end_date: string;
+  total_amount: number;
+  status: string;
+  created_at: string;
+}
+
 const DashboardPage = () => {
   const { user, loading: authLoading } = useAuth();
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -37,7 +58,7 @@ const DashboardPage = () => {
   }, [user, authLoading, navigate]);
 
   // Fetch user's workspaces
-  const { data: workspaces = [], isLoading: workspacesLoading, refetch } = useQuery({
+  const { data: workspaces = [], isLoading: workspacesLoading, refetch } = useQuery<Workspace[]>({
     queryKey: ['user-workspaces', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -51,13 +72,13 @@ const DashboardPage = () => {
         console.error('Error fetching workspaces:', error);
         throw error;
       }
-      return data;
+      return data || [];
     },
     enabled: !!user,
   });
 
   // Fetch bookings for user's workspaces
-  const { data: bookings = [] } = useQuery({
+  const { data: bookings = [] } = useQuery<Booking[]>({
     queryKey: ['workspace-bookings', user?.id],
     queryFn: async () => {
       if (!user || workspaces.length === 0) return [];
@@ -72,7 +93,7 @@ const DashboardPage = () => {
         console.error('Error fetching bookings:', error);
         throw error;
       }
-      return data;
+      return data || [];
     },
     enabled: !!user && workspaces.length > 0,
   });

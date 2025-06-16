@@ -23,6 +23,20 @@ const amenityIcons: Record<string, JSX.Element> = {
   meeting: <SquareUser className="h-4 w-4" />
 };
 
+interface Workspace {
+  id: string;
+  name: string;
+  city: string;
+  area: string;
+  rating: number | null;
+  review_count: number | null;
+  price_per_day: number;
+  amenities: string[] | null;
+  images: string[] | null;
+  is_premium: boolean | null;
+  has_video_tour: boolean | null;
+}
+
 const WorkspacesPage = () => {
   const [searchParams] = useSearchParams();
   const locationParam = searchParams.get('location');
@@ -40,7 +54,7 @@ const WorkspacesPage = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Fetch workspaces from database
-  const { data: workspaces = [], isLoading, error } = useQuery({
+  const { data: workspaces = [], isLoading, error } = useQuery<Workspace[]>({
     queryKey: ['workspaces'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -49,7 +63,7 @@ const WorkspacesPage = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 
