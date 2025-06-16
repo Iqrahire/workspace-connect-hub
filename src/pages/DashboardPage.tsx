@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,7 +24,7 @@ import {
 import { toast } from 'sonner';
 import AddWorkspaceDialog from '@/components/AddWorkspaceDialog';
 
-interface Workspace {
+interface DashboardWorkspace {
   id: string;
   name: string;
   city: string;
@@ -36,7 +35,7 @@ interface Workspace {
   review_count: number | null;
 }
 
-interface Booking {
+interface DashboardBooking {
   id: string;
   workspace_id: string;
   start_date: string;
@@ -58,9 +57,9 @@ const DashboardPage = () => {
   }, [user, authLoading, navigate]);
 
   // Fetch user's workspaces
-  const { data: workspaces = [], isLoading: workspacesLoading, refetch } = useQuery<Workspace[]>({
+  const { data: workspaces = [], isLoading: workspacesLoading, refetch } = useQuery({
     queryKey: ['user-workspaces', user?.id],
-    queryFn: async () => {
+    queryFn: async (): Promise<DashboardWorkspace[]> => {
       if (!user) return [];
       const { data, error } = await supabase
         .from('workspaces')
@@ -78,9 +77,9 @@ const DashboardPage = () => {
   });
 
   // Fetch bookings for user's workspaces
-  const { data: bookings = [] } = useQuery<Booking[]>({
+  const { data: bookings = [] } = useQuery({
     queryKey: ['workspace-bookings', user?.id],
-    queryFn: async () => {
+    queryFn: async (): Promise<DashboardBooking[]> => {
       if (!user || workspaces.length === 0) return [];
       const workspaceIds = workspaces.map(w => w.id);
       const { data, error } = await supabase

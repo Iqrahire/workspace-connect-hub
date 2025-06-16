@@ -5,7 +5,7 @@ import { Star, MapPin, Wifi, AirVent, ParkingMeter, SquareUser, Coffee } from 'l
 import { Badge } from '@/components/ui/badge';
 
 export interface WorkspaceCardProps {
-  id: number;
+  id: number | string;
   name: string;
   city: string;
   area: string;

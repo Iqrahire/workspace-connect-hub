@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -23,7 +22,7 @@ const amenityIcons: Record<string, JSX.Element> = {
   meeting: <SquareUser className="h-4 w-4" />
 };
 
-interface Workspace {
+interface WorkspaceData {
   id: string;
   name: string;
   city: string;
@@ -54,7 +53,7 @@ const WorkspacesPage = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Fetch workspaces from database
-  const { data: workspaces = [], isLoading, error } = useQuery<Workspace[]>({
+  const { data: workspaces = [], isLoading, error } = useQuery<WorkspaceData[]>({
     queryKey: ['workspaces'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -302,7 +301,7 @@ const WorkspacesPage = () => {
                   {filteredWorkspaces.map((workspace) => (
                     <WorkspaceCard 
                       key={workspace.id}
-                      id={workspace.id}
+                      id={parseInt(workspace.id) || 0}
                       name={workspace.name}
                       city={workspace.city}
                       area={workspace.area}
